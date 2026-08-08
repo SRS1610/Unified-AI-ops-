@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useId, useMemo, useRef, useState } from "react"
 import { Send, Sparkles, PanelRightOpen, PanelRightClose } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -36,6 +36,8 @@ export function ChatInterface({
   const [thinking, setThinking] = useState(false)
   const [panelOpen, setPanelOpen] = useState(false)
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const idPrefix = useId()
+  const messageCounter = useRef(0)
 
   useEffect(() => {
     api.listMessages(threadId).then(setMessages)
@@ -53,8 +55,9 @@ export function ChatInterface({
   async function send(text: string) {
     const trimmed = text.trim()
     if (!trimmed) return
+    messageCounter.current += 1
     const userMsg: ChatMessage = {
-      id: `u_${Math.random().toString(36).slice(2, 8)}`,
+      id: `${idPrefix}-${messageCounter.current}`,
       role: "user",
       content: trimmed,
       createdAt: new Date().toISOString(),

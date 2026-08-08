@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useSyncExternalStore } from "react"
 import type { ConnectorId, UseCaseId } from "./types"
 
 const KEY = "unifyops:v1"
@@ -17,15 +17,22 @@ const DEFAULT_STATE: AppState = {
   connectedConnectors: [],
 }
 
+let cache: { raw: string | null; state: AppState } | null = null
+
 function read(): AppState {
   if (typeof window === "undefined") return DEFAULT_STATE
-  try {
-    const raw = window.localStorage.getItem(KEY)
-    if (!raw) return DEFAULT_STATE
-    return { ...DEFAULT_STATE, ...JSON.parse(raw) }
-  } catch {
-    return DEFAULT_STATE
+  const raw = window.localStorage.getItem(KEY)
+  if (cache && cache.raw === raw) return cache.state
+  let state = DEFAULT_STATE
+  if (raw) {
+    try {
+      state = { ...DEFAULT_STATE, ...JSON.parse(raw) }
+    } catch {
+      state = DEFAULT_STATE
+    }
   }
+  cache = { raw, state }
+  return state
 }
 
 function write(state: AppState) {
@@ -34,47 +41,44 @@ function write(state: AppState) {
   window.dispatchEvent(new CustomEvent("unifyops:state"))
 }
 
-export function useAppState() {
-  const [state, setState] = useState<AppState>(DEFAULT_STATE)
-  const [hydrated, setHydrated] = useState(false)
+function subscribe(callback: () => void) {
+  window.addEventListener("unifyops:state", callback)
+  window.addEventListener("storage", callback)
+  return () => {
+    window.removeEventListener("unifyops:state", callback)
+    window.removeEventListener("storage", callback)
+  }
+}
 
-  useEffect(() => {
-    setState(read())
-    setHydrated(true)
-    const onChange = () => setState(read())
-    window.addEventListener("unifyops:state", onChange)
-    window.addEventListener("storage", onChange)
-    return () => {
-      window.removeEventListener("unifyops:state", onChange)
-      window.removeEventListener("storage", onChange)
-    }
-  }, [])
+function subscribeOnce() {
+  return () => {}
+}
+
+export function useAppState() {
+  const state = useSyncExternalStore(subscribe, read, () => DEFAULT_STATE)
+  const hydrated = useSyncExternalStore(
+    subscribeOnce,
+    () => true,
+    () => false,
+  )
 
   const update = useCallback((patch: Partial<AppState>) => {
-    setState((prev) => {
-      const next = { ...prev, ...patch }
-      write(next)
-      return next
-    })
+    write({ ...read(), ...patch })
   }, [])
 
   const toggleConnector = useCallback((id: ConnectorId) => {
-    setState((prev) => {
-      const has = prev.connectedConnectors.includes(id)
-      const next: AppState = {
-        ...prev,
-        connectedConnectors: has
-          ? prev.connectedConnectors.filter((c) => c !== id)
-          : [...prev.connectedConnectors, id],
-      }
-      write(next)
-      return next
+    const prev = read()
+    const has = prev.connectedConnectors.includes(id)
+    write({
+      ...prev,
+      connectedConnectors: has
+        ? prev.connectedConnectors.filter((c) => c !== id)
+        : [...prev.connectedConnectors, id],
     })
   }, [])
 
   const reset = useCallback(() => {
     write(DEFAULT_STATE)
-    setState(DEFAULT_STATE)
   }, [])
 
   return { state, hydrated, update, toggleConnector, reset }

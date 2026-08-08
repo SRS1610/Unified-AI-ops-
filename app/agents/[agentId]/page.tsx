@@ -1,7 +1,7 @@
 "use client"
 
 import { notFound } from "next/navigation"
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { ChatInterface } from "@/components/chat-interface"
@@ -25,9 +25,14 @@ const KNOWN_IDS: AgentId[] = [
   "engineering",
 ]
 
-export default function AgentDetailPage({ params }: { params: { agentId: string } }) {
-  const agent = getAgent(params.agentId)
-  const isValidAgent = !!agent && KNOWN_IDS.includes(params.agentId as AgentId)
+export default function AgentDetailPage({
+  params,
+}: {
+  params: Promise<{ agentId: string }>
+}) {
+  const { agentId } = use(params)
+  const agent = getAgent(agentId)
+  const isValidAgent = !!agent && KNOWN_IDS.includes(agentId as AgentId)
 
   const [activity, setActivity] = useState<AgentAction[]>([])
   const [autoApproveLow, setAutoApproveLow] = useState(true)
@@ -37,9 +42,9 @@ export default function AgentDetailPage({ params }: { params: { agentId: string 
   useEffect(() => {
     if (!isValidAgent) return
     Promise.all([api.listPendingActions(), api.listRecentActivity()]).then(([p, r]) => {
-      setActivity([...p, ...r].filter((a) => a.agentId === params.agentId))
+      setActivity([...p, ...r].filter((a) => a.agentId === agentId))
     })
-  }, [params.agentId, isValidAgent])
+  }, [agentId, isValidAgent])
 
   if (!agent || !isValidAgent) {
     notFound()
@@ -71,7 +76,7 @@ export default function AgentDetailPage({ params }: { params: { agentId: string 
         </div>
       </header>
 
-      <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 lg:grid-cols-[1fr,340px]">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 lg:grid-cols-[1fr,380px]">
         <div className="min-h-[520px]">
           <ChatInterface
             threadId={agent.id}

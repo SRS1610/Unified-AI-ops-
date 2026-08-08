@@ -59,7 +59,7 @@ export default function HomePage() {
         )}
       </header>
 
-      <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 lg:grid-cols-[1fr,340px]">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 lg:grid-cols-[1fr,380px]">
         <div className="min-h-[520px]">
           <ChatInterface
             threadId="home"
@@ -76,12 +76,12 @@ export default function HomePage() {
               <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Your agents
               </div>
-              <div className="mt-3 grid grid-cols-2 gap-2">
+              <div className="mt-3 flex flex-col gap-2">
                 {connectedAgents.map((a) => (
                   <Link
                     key={a.id}
                     href={`/agents/${a.id}`}
-                    className="flex items-center gap-2 rounded-lg border bg-white p-2.5 transition hover:border-primary/40 hover:bg-accent/40"
+                    className="flex items-center gap-2.5 rounded-lg border bg-white p-2.5 transition hover:border-primary/40 hover:bg-accent/40"
                   >
                     <span
                       className={cn(

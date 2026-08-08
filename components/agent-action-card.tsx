@@ -61,7 +61,7 @@ export function AgentActionCard({
               </span>
               <span className="text-xs text-muted-foreground">· {formatRelative(action.createdAt)}</span>
             </div>
-            <h3 className="mt-1 truncate text-base font-semibold text-foreground">
+            <h3 className="mt-1 line-clamp-2 text-base font-semibold text-foreground">
               {action.title}
             </h3>
             <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{action.summary}</p>
