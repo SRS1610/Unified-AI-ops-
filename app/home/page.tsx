@@ -46,7 +46,7 @@ export default function HomePage() {
             Good to see you{primary ? `, let's move ${primary.name.split(" ")[0].toLowerCase()} forward.` : "."}
           </h1>
           <p className="text-sm text-muted-foreground">
-            Ask any of your agents a question. They'll propose actions — nothing runs without your approval.
+            Ask any of your agents a question. They&apos;ll propose actions — nothing runs without your approval.
           </p>
         </div>
         {pendingCount > 0 && (

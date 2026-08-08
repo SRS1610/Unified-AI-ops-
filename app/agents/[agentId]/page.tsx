@@ -27,7 +27,7 @@ const KNOWN_IDS: AgentId[] = [
 
 export default function AgentDetailPage({ params }: { params: { agentId: string } }) {
   const agent = getAgent(params.agentId)
-  if (!agent || !KNOWN_IDS.includes(params.agentId as AgentId)) notFound()
+  const isValidAgent = !!agent && KNOWN_IDS.includes(params.agentId as AgentId)
 
   const [activity, setActivity] = useState<AgentAction[]>([])
   const [autoApproveLow, setAutoApproveLow] = useState(true)
@@ -35,10 +35,15 @@ export default function AgentDetailPage({ params }: { params: { agentId: string 
   const [dailyDigest, setDailyDigest] = useState(false)
 
   useEffect(() => {
+    if (!isValidAgent) return
     Promise.all([api.listPendingActions(), api.listRecentActivity()]).then(([p, r]) => {
       setActivity([...p, ...r].filter((a) => a.agentId === params.agentId))
     })
-  }, [params.agentId])
+  }, [params.agentId, isValidAgent])
+
+  if (!agent || !isValidAgent) {
+    notFound()
+  }
 
   return (
     <div className="mx-auto flex h-screen max-w-7xl flex-col gap-6 px-6 py-6">

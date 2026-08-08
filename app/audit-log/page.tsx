@@ -104,7 +104,7 @@ export default function AuditLogPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[190px]">Timestamp</TableHead>
+              <TableHead className="w-[210px]">Timestamp</TableHead>
               <TableHead>Agent</TableHead>
               <TableHead>Action</TableHead>
               <TableHead>Target</TableHead>
@@ -117,7 +117,7 @@ export default function AuditLogPage() {
               const agent = getAgent(e.agentId)
               return (
                 <TableRow key={e.id}>
-                  <TableCell className="font-mono text-xs text-muted-foreground">
+                  <TableCell className="whitespace-nowrap font-mono text-xs text-muted-foreground">
                     {formatDateTime(e.timestamp)}
                   </TableCell>
                   <TableCell>

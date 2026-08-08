@@ -7,7 +7,7 @@ export default function NotFound() {
       <div className="text-5xl">🕳️</div>
       <h1 className="text-2xl font-semibold">Nothing here.</h1>
       <p className="max-w-md text-sm text-muted-foreground">
-        This page doesn't exist yet. Head back to your workspace.
+        This page doesn&apos;t exist yet. Head back to your workspace.
       </p>
       <Link href="/home">
         <Button>Back to home</Button>

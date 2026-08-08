@@ -40,7 +40,7 @@ export default function OnboardingPage() {
         </div>
         <div>
           <h1 className="text-lg font-semibold">Welcome to UnifyOps AI</h1>
-          <p className="text-sm text-muted-foreground">Three quick steps, then you're in.</p>
+          <p className="text-sm text-muted-foreground">Three quick steps, then you&apos;re in.</p>
         </div>
       </header>
 
@@ -152,7 +152,7 @@ export default function OnboardingPage() {
                     Try asking
                   </div>
                   <div className="mt-1 text-base font-medium text-foreground">
-                    "{agent.samplePrompts[0]}"
+                    &ldquo;{agent.samplePrompts[0]}&rdquo;
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">

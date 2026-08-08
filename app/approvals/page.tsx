@@ -66,7 +66,7 @@ export default function ApprovalsPage() {
               <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
                 <CheckCheck className="h-5 w-5" />
               </div>
-              <h2 className="mt-3 text-lg font-semibold">You're all clear</h2>
+              <h2 className="mt-3 text-lg font-semibold">You&apos;re all clear</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Nothing waiting for approval. Great work.
               </p>

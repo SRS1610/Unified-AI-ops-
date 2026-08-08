@@ -148,7 +148,7 @@ export default function SettingsPage() {
                     Billing
                   </div>
                   <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                    You're on the Business plan trial. Add a payment method to keep going after
+                    You&apos;re on the Business plan trial. Add a payment method to keep going after
                     Aug 30.
                   </p>
                 </div>
